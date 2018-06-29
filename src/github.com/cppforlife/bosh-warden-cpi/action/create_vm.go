@@ -23,7 +23,7 @@ func NewCreateVMMethod(stemcellFinder bwcstem.Finder, vmCreator bwcvm.Creator) C
 func (a CreateVMMethod) CreateVM(
 	agentID apiv1.AgentID, stemcellCID apiv1.StemcellCID,
 	cloudProps apiv1.VMCloudProps, networks apiv1.Networks,
-	associatedDiskCIDs []apiv1.DiskCID, env apiv1.VMEnv) (apiv1.VMCID, error) {
+	associatedDiskCIDs []apiv1.DiskCID, env apiv1.VMEnv, _ apiv1.ApiVersions) (interface{}, error) {
 
 	stemcell, found, err := a.stemcellFinder.Find(stemcellCID)
 	if err != nil {

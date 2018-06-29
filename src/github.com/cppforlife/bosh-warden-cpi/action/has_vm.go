@@ -15,7 +15,7 @@ func NewHasVMMethod(vmFinder bwcvm.Finder) HasVMMethod {
 	return HasVMMethod{vmFinder: vmFinder}
 }
 
-func (a HasVMMethod) HasVM(cid apiv1.VMCID) (bool, error) {
+func (a HasVMMethod) HasVM(cid apiv1.VMCID, _ apiv1.ApiVersions) (bool, error) {
 	_, found, err := a.vmFinder.Find(cid)
 	if err != nil {
 		return false, bosherr.WrapErrorf(err, "Finding VM '%s'", cid)

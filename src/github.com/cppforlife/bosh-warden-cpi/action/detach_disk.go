@@ -17,7 +17,7 @@ func NewDetachDiskMethod(vmFinder bwcvm.Finder, diskFinder bwcdisk.Finder) Detac
 	return DetachDiskMethod{vmFinder, diskFinder}
 }
 
-func (a DetachDiskMethod) DetachDisk(vmCID apiv1.VMCID, diskCID apiv1.DiskCID) error {
+func (a DetachDiskMethod) DetachDisk(vmCID apiv1.VMCID, diskCID apiv1.DiskCID, _ apiv1.ApiVersions) error {
 	vm, found, err := a.vmFinder.Find(vmCID)
 	if err != nil {
 		return bosherr.WrapErrorf(err, "Finding VM '%s'", vmCID)

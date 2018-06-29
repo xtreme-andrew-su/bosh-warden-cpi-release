@@ -15,7 +15,7 @@ func NewDeleteVMMethod(vmFinder bwcvm.Finder) DeleteVMMethod {
 	return DeleteVMMethod{vmFinder: vmFinder}
 }
 
-func (a DeleteVMMethod) DeleteVM(cid apiv1.VMCID) error {
+func (a DeleteVMMethod) DeleteVM(cid apiv1.VMCID, _ apiv1.ApiVersions) error {
 	vm, _, err := a.vmFinder.Find(cid)
 	if err != nil {
 		return bosherr.WrapErrorf(err, "Finding vm '%s'", cid)

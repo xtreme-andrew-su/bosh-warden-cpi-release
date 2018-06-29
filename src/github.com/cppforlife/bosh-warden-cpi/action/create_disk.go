@@ -15,7 +15,7 @@ func NewCreateDiskMethod(diskCreator bwcdisk.Creator) CreateDiskMethod {
 	return CreateDiskMethod{diskCreator: diskCreator}
 }
 
-func (a CreateDiskMethod) CreateDisk(size int, _ apiv1.DiskCloudProps, _ *apiv1.VMCID) (apiv1.DiskCID, error) {
+func (a CreateDiskMethod) CreateDisk(size int, _ apiv1.DiskCloudProps, _ *apiv1.VMCID, _ apiv1.ApiVersions) (apiv1.DiskCID, error) {
 	disk, err := a.diskCreator.Create(size)
 	if err != nil {
 		return apiv1.DiskCID{}, bosherr.WrapErrorf(err, "Creating disk of size '%d'", size)

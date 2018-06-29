@@ -13,7 +13,7 @@ func NewGetDisksMethod(vmFinder bwcvm.Finder) GetDisksMethod {
 	return GetDisksMethod{vmFinder}
 }
 
-func (a GetDisksMethod) GetDisks(cid apiv1.VMCID) ([]apiv1.DiskCID, error) {
+func (a GetDisksMethod) GetDisks(cid apiv1.VMCID, _ apiv1.ApiVersions) ([]apiv1.DiskCID, error) {
 	// todo implement
 	return nil, nil
 }

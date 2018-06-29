@@ -15,7 +15,7 @@ func NewDeleteStemcellMethod(stemcellFinder bwcstem.Finder) DeleteStemcellMethod
 	return DeleteStemcellMethod{stemcellFinder: stemcellFinder}
 }
 
-func (a DeleteStemcellMethod) DeleteStemcell(cid apiv1.StemcellCID) error {
+func (a DeleteStemcellMethod) DeleteStemcell(cid apiv1.StemcellCID, _ apiv1.ApiVersions) error {
 	stemcell, found, err := a.stemcellFinder.Find(cid)
 	if err != nil {
 		return bosherr.WrapErrorf(err, "Finding stemcell '%s'", cid)

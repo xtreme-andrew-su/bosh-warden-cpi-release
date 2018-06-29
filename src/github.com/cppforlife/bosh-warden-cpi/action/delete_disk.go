@@ -15,7 +15,7 @@ func NewDeleteDiskMethod(diskFinder bwcdisk.Finder) DeleteDiskMethod {
 	return DeleteDiskMethod{diskFinder: diskFinder}
 }
 
-func (a DeleteDiskMethod) DeleteDisk(cid apiv1.DiskCID) error {
+func (a DeleteDiskMethod) DeleteDisk(cid apiv1.DiskCID, _ apiv1.ApiVersions) error {
 	disk, err := a.diskFinder.Find(cid)
 	if err != nil {
 		return bosherr.WrapErrorf(err, "Finding disk '%s'", cid)

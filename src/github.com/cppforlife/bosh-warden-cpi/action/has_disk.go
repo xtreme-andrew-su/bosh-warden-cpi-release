@@ -15,7 +15,7 @@ func NewHasDiskMethod(diskFinder bwcdisk.Finder) HasDiskMethod {
 	return HasDiskMethod{diskFinder: diskFinder}
 }
 
-func (a HasDiskMethod) HasDisk(cid apiv1.DiskCID) (bool, error) {
+func (a HasDiskMethod) HasDisk(cid apiv1.DiskCID, _ apiv1.ApiVersions) (bool, error) {
 	disk, err := a.diskFinder.Find(cid)
 	if err != nil {
 		return false, bosherr.WrapErrorf(err, "Finding disk '%s'", cid)

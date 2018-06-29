@@ -15,7 +15,7 @@ func NewCreateStemcellMethod(stemcellImporter bwcstem.Importer) CreateStemcellMe
 	return CreateStemcellMethod{stemcellImporter: stemcellImporter}
 }
 
-func (a CreateStemcellMethod) CreateStemcell(imagePath string, _ apiv1.StemcellCloudProps) (apiv1.StemcellCID, error) {
+func (a CreateStemcellMethod) CreateStemcell(imagePath string, _ apiv1.StemcellCloudProps, _ apiv1.ApiVersions) (apiv1.StemcellCID, error) {
 	stemcell, err := a.stemcellImporter.ImportFromPath(imagePath)
 	if err != nil {
 		return apiv1.StemcellCID{}, bosherr.WrapErrorf(err, "Importing stemcell from '%s'", imagePath)
