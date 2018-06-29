@@ -30,8 +30,9 @@ func (fake *FakeCPIFactory) New(arg1 apiv1.CallContext) (apiv1.CPI, error) {
 	fake.newMutex.Unlock()
 	if fake.NewStub != nil {
 		return fake.NewStub(arg1)
+	} else {
+		return fake.newReturns.result1, fake.newReturns.result2
 	}
-	return fake.newReturns.result1, fake.newReturns.result2
 }
 
 func (fake *FakeCPIFactory) NewCallCount() int {

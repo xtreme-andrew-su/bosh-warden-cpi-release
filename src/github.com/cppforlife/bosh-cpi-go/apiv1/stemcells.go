@@ -1,8 +1,8 @@
 package apiv1
 
 type Stemcells interface {
-	CreateStemcell(string, StemcellCloudProps) (StemcellCID, error)
-	DeleteStemcell(StemcellCID) error
+	CreateStemcell(string, StemcellCloudProps, ApiVersions) (StemcellCID, error)
+	DeleteStemcell(StemcellCID, ApiVersions) error
 }
 
 type StemcellCloudProps interface {

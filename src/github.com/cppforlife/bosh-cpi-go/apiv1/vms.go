@@ -1,16 +1,16 @@
 package apiv1
 
 type VMs interface {
-	CreateVM(AgentID, StemcellCID, VMCloudProps, Networks, []DiskCID, VMEnv) (VMCID, error)
-	DeleteVM(VMCID) error
+	CreateVM(AgentID, StemcellCID, VMCloudProps, Networks, []DiskCID, VMEnv, ApiVersions) (interface{}, error)
+	DeleteVM(VMCID, ApiVersions) error
 
-	CalculateVMCloudProperties(VMResources) (VMCloudProps, error)
+	CalculateVMCloudProperties(VMResources, ApiVersions) (VMCloudProps, error)
 
-	SetVMMetadata(VMCID, VMMeta) error
-	HasVM(VMCID) (bool, error)
+	SetVMMetadata(VMCID, VMMeta, ApiVersions) error
+	HasVM(VMCID, ApiVersions) (bool, error)
 
-	RebootVM(VMCID) error
-	GetDisks(VMCID) ([]DiskCID, error)
+	RebootVM(VMCID, ApiVersions) error
+	GetDisks(VMCID, ApiVersions) ([]DiskCID, error)
 }
 
 type VMCloudProps interface {

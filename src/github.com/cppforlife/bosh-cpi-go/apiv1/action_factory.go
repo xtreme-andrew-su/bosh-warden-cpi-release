@@ -14,7 +14,7 @@ func NewActionFactory(cpiFactory CPIFactory) ActionFactory {
 	return ActionFactory{cpiFactory}
 }
 
-func (f ActionFactory) Create(method string, context CallContext) (interface{}, error) {
+func (f ActionFactory) Create(method string, context CallContext, apiVersions ApiVersions) (interface{}, error) {
 	cpi, err := f.cpiFactory.New(context)
 	if err != nil {
 		return nil, err
@@ -28,46 +28,50 @@ func (f ActionFactory) Create(method string, context CallContext) (interface{}, 
 
 	case "create_stemcell":
 		return func(imagePath string, props CloudPropsImpl) (StemcellCID, error) {
-			return cpi.CreateStemcell(imagePath, props)
+			return cpi.CreateStemcell(imagePath, props, apiVersions)
 		}, nil
 
 	case "delete_stemcell":
 		return func(cid StemcellCID) (interface{}, error) {
-			return nil, cpi.DeleteStemcell(cid)
+			return nil, cpi.DeleteStemcell(cid, apiVersions)
 		}, nil
 
 	case "create_vm":
 		return func(
 			agentID AgentID, stemcellCID StemcellCID, props CloudPropsImpl,
-			networks Networks, diskCIDs []DiskCID, env VMEnv) (VMCID, error) {
+			networks Networks, diskCIDs []DiskCID, env VMEnv) (interface{}, error) {
 
-			return cpi.CreateVM(agentID, stemcellCID, props, networks, diskCIDs, env)
+			return cpi.CreateVM(agentID, stemcellCID, props, networks, diskCIDs, env, apiVersions)
 		}, nil
 
 	case "delete_vm":
 		return func(cid VMCID) (interface{}, error) {
-			return nil, cpi.DeleteVM(cid)
+			return nil, cpi.DeleteVM(cid, apiVersions)
 		}, nil
 
 	case "calculate_vm_cloud_properties":
-		return cpi.CalculateVMCloudProperties, nil
+		return func(vmResource VMResources) (interface{}, error) {
+			return cpi.CalculateVMCloudProperties(vmResource, apiVersions)
+		}, nil
 
 	case "set_vm_metadata":
 		return func(cid VMCID, metadata VMMeta) (interface{}, error) {
-			return nil, cpi.SetVMMetadata(cid, metadata)
+			return nil, cpi.SetVMMetadata(cid, metadata, apiVersions)
 		}, nil
 
 	case "has_vm":
-		return cpi.HasVM, nil
+		return func(cid VMCID) (interface{}, error) {
+			return cpi.HasVM(cid, apiVersions)
+		}, nil
 
 	case "reboot_vm":
 		return func(cid VMCID) (string, error) {
-			return "", cpi.RebootVM(cid)
+			return "", cpi.RebootVM(cid, apiVersions)
 		}, nil
 
 	case "get_disks":
 		return func(cid VMCID) ([]DiskCID, error) {
-			diskCIDs, err := cpi.GetDisks(cid)
+			diskCIDs, err := cpi.GetDisks(cid, apiVersions)
 			if len(diskCIDs) == 0 {
 				return []DiskCID{}, err
 			}
@@ -76,26 +80,28 @@ func (f ActionFactory) Create(method string, context CallContext) (interface{}, 
 
 	case "create_disk":
 		return func(size int, props CloudPropsImpl, vmCID *VMCID) (DiskCID, error) {
-			return cpi.CreateDisk(size, props, vmCID)
+			return cpi.CreateDisk(size, props, vmCID, apiVersions)
 		}, nil
 
 	case "delete_disk":
 		return func(cid DiskCID) (interface{}, error) {
-			return nil, cpi.DeleteDisk(cid)
+			return nil, cpi.DeleteDisk(cid, apiVersions)
 		}, nil
 
 	case "attach_disk":
 		return func(vmCID VMCID, diskCID DiskCID) (interface{}, error) {
-			return nil, cpi.AttachDisk(vmCID, diskCID)
+			return cpi.AttachDisk(vmCID, diskCID, apiVersions)
 		}, nil
 
 	case "detach_disk":
 		return func(vmCID VMCID, diskCID DiskCID) (interface{}, error) {
-			return nil, cpi.DetachDisk(vmCID, diskCID)
+			return nil, cpi.DetachDisk(vmCID, diskCID, apiVersions)
 		}, nil
 
 	case "has_disk":
-		return cpi.HasDisk, nil
+		return func(cid DiskCID) (interface{}, error) {
+			return cpi.HasDisk(cid, apiVersions)
+		}, nil
 
 	default:
 		return nil, bosherr.Errorf("Unknown method '%s'", method)

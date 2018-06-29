@@ -93,7 +93,7 @@ var _ = Describe("Factory", func() {
 			resp, _ := act(`{"method":"create_stemcell", "arguments":["/image-path", {"cp1": "cp1-val"}]}`)
 			Expect(resp).To(Equal(Response{Result: "stemcell-cid"}))
 
-			imagePath, cloudProps := cpi.CreateStemcellArgsForCall(0)
+			imagePath, cloudProps, _ := cpi.CreateStemcellArgsForCall(0)
 			Expect(imagePath).To(Equal("/image-path"))
 
 			var cp FakeCPs
@@ -116,7 +116,7 @@ var _ = Describe("Factory", func() {
 			resp, _ := act(`{"method":"delete_stemcell", "arguments":["stemcell-cid"]}`)
 			Expect(resp).To(Equal(Response{}))
 
-			cid := cpi.DeleteStemcellArgsForCall(0)
+			cid, _ := cpi.DeleteStemcellArgsForCall(0)
 			Expect(cid).To(Equal(apiv1.NewStemcellCID("stemcell-cid")))
 		})
 
@@ -137,7 +137,7 @@ var _ = Describe("Factory", func() {
         {}, [], {"env1": "env1-val"}]}`)
 			Expect(resp).To(Equal(Response{Result: "vm-cid"}))
 
-			agentID, stemcellCID, cloudProps, nets, diskCIDs, env := cpi.CreateVMArgsForCall(0)
+			agentID, stemcellCID, cloudProps, nets, diskCIDs, env, _ := cpi.CreateVMArgsForCall(0)
 			Expect(agentID).To(Equal(apiv1.NewAgentID("agent-id")))
 			Expect(stemcellCID).To(Equal(apiv1.NewStemcellCID("stemcell-cid")))
 			Expect(nets).To(Equal(apiv1.Networks{}))
@@ -172,7 +172,7 @@ var _ = Describe("Factory", func() {
         }, [], {}]}`)
 			Expect(resp).To(Equal(Response{Result: "vm-cid"}))
 
-			_, _, _, nets, _, _ := cpi.CreateVMArgsForCall(0)
+			_, _, _, nets, _, _, _ := cpi.CreateVMArgsForCall(0)
 
 			net1 := nets["net1"]
 
@@ -209,7 +209,7 @@ var _ = Describe("Factory", func() {
         {"net1": {}}, ["disk-cid1", "disk-cid2"], {"env1": "env1-val"}]}`)
 			Expect(resp).To(Equal(Response{Result: "vm-cid"}))
 
-			_, _, _, _, diskCIDs, _ := cpi.CreateVMArgsForCall(0)
+			_, _, _, _, diskCIDs, _, _ := cpi.CreateVMArgsForCall(0)
 			Expect(diskCIDs).To(Equal([]apiv1.DiskCID{
 				apiv1.NewDiskCID("disk-cid1"),
 				apiv1.NewDiskCID("disk-cid2"),
@@ -224,7 +224,7 @@ var _ = Describe("Factory", func() {
         {"net1": {}}, null, {"env1": "env1-val"}]}`)
 			Expect(resp).To(Equal(Response{Result: "vm-cid"}))
 
-			_, _, _, _, diskCIDs, _ := cpi.CreateVMArgsForCall(0)
+			_, _, _, _, diskCIDs, _, _ := cpi.CreateVMArgsForCall(0)
 			Expect(diskCIDs).To(HaveLen(0))
 		})
 
@@ -245,7 +245,7 @@ var _ = Describe("Factory", func() {
 			resp, _ := act(`{"method":"delete_vm", "arguments":["vm-cid"]}`)
 			Expect(resp).To(Equal(Response{Result: nil}))
 
-			cid := cpi.DeleteVMArgsForCall(0)
+			cid, _ := cpi.DeleteVMArgsForCall(0)
 			Expect(cid).To(Equal(apiv1.NewVMCID("vm-cid")))
 		})
 
@@ -264,7 +264,7 @@ var _ = Describe("Factory", func() {
 			resp, _ := act(`{"method":"calculate_vm_cloud_properties", "arguments":[{"ram": 123, "cpu": 1, "ephemeral_disk_size": 1000}]}`)
 			Expect(resp).To(Equal(Response{Result: nil}))
 
-			vmRes := cpi.CalculateVMCloudPropertiesArgsForCall(0)
+			vmRes, _ := cpi.CalculateVMCloudPropertiesArgsForCall(0)
 			Expect(vmRes).To(Equal(apiv1.VMResources{
 				RAM:               123,
 				CPU:               1,
@@ -287,7 +287,7 @@ var _ = Describe("Factory", func() {
 			resp, _ := act(`{"method":"set_vm_metadata", "arguments":["vm-cid", {"meta1": "meta1-val"}]}`)
 			Expect(resp).To(Equal(Response{Result: nil}))
 
-			cid, meta := cpi.SetVMMetadataArgsForCall(0)
+			cid, meta, _ := cpi.SetVMMetadataArgsForCall(0)
 			Expect(cid).To(Equal(apiv1.NewVMCID("vm-cid")))
 			Expect(meta).To(Equal(apiv1.NewVMMeta(map[string]interface{}{"meta1": "meta1-val"})))
 		})
@@ -307,7 +307,7 @@ var _ = Describe("Factory", func() {
 			resp, _ := act(`{"method":"has_vm", "arguments":["vm-cid"]}`)
 			Expect(resp).To(Equal(Response{Result: true}))
 
-			cid := cpi.HasVMArgsForCall(0)
+			cid, _ := cpi.HasVMArgsForCall(0)
 			Expect(cid).To(Equal(apiv1.NewVMCID("vm-cid")))
 		})
 
@@ -326,7 +326,7 @@ var _ = Describe("Factory", func() {
 			resp, _ := act(`{"method":"reboot_vm", "arguments":["vm-cid"]}`)
 			Expect(resp).To(Equal(Response{Result: ""}))
 
-			cid := cpi.RebootVMArgsForCall(0)
+			cid, _ := cpi.RebootVMArgsForCall(0)
 			Expect(cid).To(Equal(apiv1.NewVMCID("vm-cid")))
 		})
 
@@ -345,7 +345,7 @@ var _ = Describe("Factory", func() {
 			resp, _ := act(`{"method":"get_disks", "arguments":["vm-cid"]}`)
 			Expect(resp).To(Equal(Response{Result: []interface{}{}})) // empty array, not nil
 
-			cid := cpi.GetDisksArgsForCall(0)
+			cid, _ := cpi.GetDisksArgsForCall(0)
 			Expect(cid).To(Equal(apiv1.NewVMCID("vm-cid")))
 		})
 
@@ -358,7 +358,7 @@ var _ = Describe("Factory", func() {
 			resp, _ := act(`{"method":"get_disks", "arguments":["vm-cid"]}`)
 			Expect(resp).To(Equal(Response{Result: []interface{}{"disk-cid1", "disk-cid2"}}))
 
-			cid := cpi.GetDisksArgsForCall(0)
+			cid, _ := cpi.GetDisksArgsForCall(0)
 			Expect(cid).To(Equal(apiv1.NewVMCID("vm-cid")))
 		})
 
@@ -377,7 +377,7 @@ var _ = Describe("Factory", func() {
 			resp, _ := act(`{"method":"create_disk", "arguments":[123, {"cp1": "cp1-val"}, null]}`)
 			Expect(resp).To(Equal(Response{Result: "disk-cid"}))
 
-			size, cloudProps, vmCID := cpi.CreateDiskArgsForCall(0)
+			size, cloudProps, vmCID, _ := cpi.CreateDiskArgsForCall(0)
 			Expect(size).To(Equal(123))
 			Expect(vmCID).To(BeNil())
 
@@ -392,7 +392,7 @@ var _ = Describe("Factory", func() {
 			resp, _ := act(`{"method":"create_disk", "arguments":[123, {"cp1": "cp1-val"}, "vm-cid"]}`)
 			Expect(resp).To(Equal(Response{Result: "disk-cid"}))
 
-			size, cloudProps, vmCID := cpi.CreateDiskArgsForCall(0)
+			size, cloudProps, vmCID, _ := cpi.CreateDiskArgsForCall(0)
 			Expect(size).To(Equal(123))
 			Expect(*vmCID).To(Equal(apiv1.NewVMCID("vm-cid")))
 
@@ -416,7 +416,7 @@ var _ = Describe("Factory", func() {
 			resp, _ := act(`{"method":"delete_disk", "arguments":["disk-cid"]}`)
 			Expect(resp).To(Equal(Response{Result: nil}))
 
-			cid := cpi.DeleteDiskArgsForCall(0)
+			cid, _ := cpi.DeleteDiskArgsForCall(0)
 			Expect(cid).To(Equal(apiv1.NewDiskCID("disk-cid")))
 		})
 
@@ -430,18 +430,18 @@ var _ = Describe("Factory", func() {
 
 	Describe("attach_disk", func() {
 		It("works", func() {
-			cpi.AttachDiskReturns(nil)
+			cpi.AttachDiskReturns("/dev/sdf", nil)
 
 			resp, _ := act(`{"method":"attach_disk", "arguments":["vm-cid", "disk-cid"]}`)
-			Expect(resp).To(Equal(Response{Result: nil}))
+			Expect(resp).To(Equal(Response{Result: "/dev/sdf"}))
 
-			vmCID, diskCID := cpi.AttachDiskArgsForCall(0)
+			vmCID, diskCID, _ := cpi.AttachDiskArgsForCall(0)
 			Expect(vmCID).To(Equal(apiv1.NewVMCID("vm-cid")))
 			Expect(diskCID).To(Equal(apiv1.NewDiskCID("disk-cid")))
 		})
 
 		It("errs", func() {
-			cpi.AttachDiskReturns(errors.New("err"))
+			cpi.AttachDiskReturns("/dev/sdf", errors.New("err"))
 
 			resp, _ := act(`{"method":"attach_disk", "arguments":["vm-cid", "disk-cid"]}`)
 			Expect(resp).To(Equal(Response{Error: &ResponseError{Type: "Bosh::Clouds::CloudError", Message: "err"}}))
@@ -455,7 +455,7 @@ var _ = Describe("Factory", func() {
 			resp, _ := act(`{"method":"detach_disk", "arguments":["vm-cid", "disk-cid"]}`)
 			Expect(resp).To(Equal(Response{Result: nil}))
 
-			vmCID, diskCID := cpi.DetachDiskArgsForCall(0)
+			vmCID, diskCID, _ := cpi.DetachDiskArgsForCall(0)
 			Expect(vmCID).To(Equal(apiv1.NewVMCID("vm-cid")))
 			Expect(diskCID).To(Equal(apiv1.NewDiskCID("disk-cid")))
 		})
@@ -475,7 +475,7 @@ var _ = Describe("Factory", func() {
 			resp, _ := act(`{"method":"has_disk", "arguments":["disk-cid"]}`)
 			Expect(resp).To(Equal(Response{Result: true}))
 
-			cid := cpi.HasDiskArgsForCall(0)
+			cid, _ := cpi.HasDiskArgsForCall(0)
 			Expect(cid).To(Equal(apiv1.NewDiskCID("disk-cid")))
 		})
 
